@@ -37,8 +37,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
 
-        await self.send(text_data=json.dumps({"message": message}))
-
+        # await self.send(text_data=json.dumps({"message": message}))
+        await self.send(text_data=json.dumps({
+            'type': 'message',
+            'message': message
+        }))
 
 # chat/consumers.py
 # import json

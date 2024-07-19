@@ -9,6 +9,7 @@ const ChatRoomEntry = () => {
 
   const handleInputChange = (e) => {
     setRoomName(e.target.value);
+    console.log("e.target.value", e.target.value);
   };
 
   const handleEnterKeyPress = (e) => {
