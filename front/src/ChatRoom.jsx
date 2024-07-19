@@ -1,24 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ChatRoom = () => {
+  const [roomName, setRoomName] = useState(window.location.href.split('/')[3]);
   useEffect(() => {
+    setRoomName(window.location.href.split('/')[3]);
+    // setRoomName()
+    console.log(roomName)
     const chatSocket = new WebSocket(
       `ws://${window.location.host}/ws/chat/${roomName}/`
     );
 
+    chatSocket.onopen = function(event) {
+      console.log("WebSocket connection established.");
+    };
+
+    // chatSocket.onmessage = function(event) {
+    //   console.log("Message received 1: ", event.data);
+    // };
     chatSocket.onmessage = function (e) {
       const data = JSON.parse(e.data);
       document.querySelector('#chat-log').value += data.message + '\n';
     };
 
-    chatSocket.onclose = function (e) {
-      console.error('Chat socket closed unexpectedly');
+    chatSocket.onerror = function(error) {
+      console.error("WebSocket error 2: ", error);
     };
 
-    return () => {
-      chatSocket.close();
+    chatSocket.onclose = function(event) {
+      console.log("WebSocket connection closed with code: ", event.code);
     };
-  }, [roomName]);
+
+
+    // chatSocket.onmessage = function (e) {
+    //   const data = JSON.parse(e.data);
+    //   document.querySelector('#chat-log').value += data.message + '\n';
+    // };
+
+    // chatSocket.onclose = function (e) {
+    //   console.error('Chat socket closed unexpectedly');
+    // };
+
+    // return () => {
+    //   chatSocket.close();
+    // };
+  }, [window.location.href.split('/')[3]]);
 
   const handleMessageEnterKeyPress = (e) => {
     if (e.key === 'Enter') {
